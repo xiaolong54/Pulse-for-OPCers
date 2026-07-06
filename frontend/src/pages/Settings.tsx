@@ -4,9 +4,9 @@ const { Title, Paragraph } = Typography
 
 const Settings = () => {
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2}>系统设置</Title>
-      <Card>
+    <div>
+      <Title level={3}>系统设置</Title>
+      <Card bordered={false} style={{ borderRadius: 12 }}>
         <Paragraph>
           此页面将展示系统配置功能，包括：
         </Paragraph>

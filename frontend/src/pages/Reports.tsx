@@ -4,9 +4,9 @@ const { Title, Paragraph } = Typography
 
 const Reports = () => {
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2}>智能报告</Title>
-      <Card>
+    <div>
+      <Title level={3}>智能报告</Title>
+      <Card bordered={false} style={{ borderRadius: 12 }}>
         <Paragraph>
           此页面将展示AI自动生成的报告功能，包括：
         </Paragraph>

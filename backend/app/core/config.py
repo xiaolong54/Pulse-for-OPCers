@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     # CORS配置
     BACKEND_CORS_ORIGINS: list = ["*"]
 
+    # AI配置
+    AI_API_KEY: str = ""
+    AI_API_URL: str = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+    AI_MODEL: str = "glm-4"
+
     class Config:
         env_file = ".env"
         case_sensitive = True

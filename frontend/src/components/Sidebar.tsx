@@ -5,6 +5,7 @@ import {
   AlertOutlined,
   FileTextOutlined,
   SettingOutlined,
+  CheckSquareOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -26,6 +27,11 @@ const menuItems = [
     key: '/alerts',
     icon: <AlertOutlined />,
     label: '预警中心',
+  },
+  {
+    key: '/tasks',
+    icon: <CheckSquareOutlined />,
+    label: '任务管理',
   },
   {
     key: '/reports',

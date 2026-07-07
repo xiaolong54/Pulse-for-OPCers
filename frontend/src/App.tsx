@@ -13,6 +13,8 @@ import Tasks from './pages/Tasks'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
 import Import from './pages/Import'
+import DataSources from './pages/DataSources'
+import DbSources from './pages/DbSources'
 
 const { Content } = Layout
 
@@ -66,6 +68,8 @@ function AppRoutes() {
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/import" element={<Import />} />
+        <Route path="/datasources" element={<DataSources />} />
+        <Route path="/dbsources" element={<DbSources />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

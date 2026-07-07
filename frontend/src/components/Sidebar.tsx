@@ -7,6 +7,8 @@ import {
   SettingOutlined,
   CheckSquareOutlined,
   ImportOutlined,
+  CloudSyncOutlined,
+  DatabaseOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -43,6 +45,16 @@ const menuItems = [
     key: '/import',
     icon: <ImportOutlined />,
     label: '数据导入',
+  },
+  {
+    key: '/datasources',
+    icon: <CloudSyncOutlined />,
+    label: 'API 数据源',
+  },
+  {
+    key: '/dbsources',
+    icon: <DatabaseOutlined />,
+    label: '数据库连接',
   },
   {
     key: '/settings',

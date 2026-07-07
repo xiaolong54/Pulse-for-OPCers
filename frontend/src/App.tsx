@@ -15,6 +15,7 @@ import Settings from './pages/Settings'
 import Import from './pages/Import'
 import DataSources from './pages/DataSources'
 import DbSources from './pages/DbSources'
+import AIAnalysis from './pages/AIAnalysis'
 
 const { Content } = Layout
 
@@ -70,6 +71,7 @@ function AppRoutes() {
         <Route path="/import" element={<Import />} />
         <Route path="/datasources" element={<DataSources />} />
         <Route path="/dbsources" element={<DbSources />} />
+        <Route path="/ai-analysis" element={<AIAnalysis />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

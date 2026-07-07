@@ -9,6 +9,7 @@ import {
   ImportOutlined,
   CloudSyncOutlined,
   DatabaseOutlined,
+  RobotOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -55,6 +56,11 @@ const menuItems = [
     key: '/dbsources',
     icon: <DatabaseOutlined />,
     label: '数据库连接',
+  },
+  {
+    key: '/ai-analysis',
+    icon: <RobotOutlined />,
+    label: 'AI 分析',
   },
   {
     key: '/settings',

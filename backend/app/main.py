@@ -48,6 +48,7 @@ import_module = importlib.import_module("app.api.import")
 import_router = import_module.router
 from app.api.datasource import router as datasource_router
 from app.api.dbsource import router as dbsource_router
+from app.api.ai_predict import router as ai_predict_router
 app.include_router(auth_router)
 app.include_router(dashboard_router)
 app.include_router(analysis_router)
@@ -58,6 +59,7 @@ app.include_router(task_router)
 app.include_router(import_router)
 app.include_router(datasource_router)
 app.include_router(dbsource_router)
+app.include_router(ai_predict_router)
 
 
 @app.get("/")

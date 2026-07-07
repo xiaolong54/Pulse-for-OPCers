@@ -17,7 +17,7 @@ async def chat_with_ai(prompt: str, context: str = "") -> str:
     else:
         messages.append({"role": "user", "content": prompt})
 
-    # 智谱 GLM-4 API
+    # DeepSeek API (兼容OpenAI格式)
     async with httpx.AsyncClient(timeout=30.0) as client:
         resp = await client.post(
             settings.AI_API_URL,

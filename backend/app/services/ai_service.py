@@ -18,7 +18,7 @@ async def chat_with_ai(prompt: str, context: str = "") -> str:
         messages.append({"role": "user", "content": prompt})
 
     # DeepSeek API (兼容OpenAI格式)
-    async with httpx.AsyncClient(timeout=30.0) as client:
+    async with httpx.AsyncClient(timeout=30.0, proxy=None) as client:
         resp = await client.post(
             settings.AI_API_URL,
             headers={"Authorization": f"Bearer {settings.AI_API_KEY}"},

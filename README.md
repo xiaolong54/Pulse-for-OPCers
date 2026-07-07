@@ -9,13 +9,57 @@
 
 ## ✨ 核心功能
 
-| 功能 | 说明 |
-|------|------|
-| 📊 **智能仪表盘** | KPI卡片 + 趋势图 + AI洞察，一眼掌握业务全貌 |
-| 📈 **数据分析** | 多维度筛选 + 图表切换 + 数据导出 |
-| ⚠️ **预警中心** | 实时预警 + 智能处理 + 统计分析 |
-| 🤖 **AI助手** | DeepSeek驱动，随时对话分析数据 |
-| 👥 **用户管理** | 多角色权限（管理员/编辑者/查看者） |
+### 📊 智能仪表盘
+- KPI卡片：本月收入、成本、利润、增长率
+- 30天趋势图（ECharts）
+- AI自动生成的业务洞察
+
+### 📈 数据分析
+- 多维度筛选（分类、区域、时间）
+- 折线图/柱状图切换
+- 明细数据表格 + CSV导出
+
+### ⚠️ 预警中心
+- 预警列表（红/橙/绿三级）
+- 一键处理预警
+- 预警统计卡片
+
+### 📄 报告中心
+- AI自动生成报告（月度/季度/年度/自定义）
+- 报告列表、预览、删除
+- 多格式导出（PDF/Word/Excel）
+
+### ✅ 任务管理
+- 任务CRUD（创建、读取、更新、删除）
+- 任务统计（全部、待办、进行中、已完成）
+- 状态筛选、完成任务操作
+
+### 📁 数据导入
+- 支持Excel (.xlsx, .xls)、CSV (.csv)、JSON (.json) 格式
+- 拖拽或点击上传文件
+- 数据预览（显示前10行）
+- 导入记录管理
+
+### 🔗 API数据源
+- API来源CRUD
+- 手动同步
+- 同步日志查看
+
+### 🗄️ 数据库连接
+- MySQL数据库连接
+- 连接测试
+- 数据同步
+
+### 🤖 AI分析
+- **趋势预测**：自定义时间范围，显示预测值和置信区间
+- **智能分析建议**：一键生成关键洞察和行动建议
+- **异常检测**：自动检测数据异常并分析原因
+- **决策模拟**：输入决策方案，AI模拟结果和风险评估
+
+### 💬 AI助手
+- 右下角悬浮按钮
+- 上下文感知对话
+- 基于当前数据分析
 
 ## 🖥️ 界面预览
 
@@ -29,15 +73,31 @@
 - 折线图/柱状图切换
 - 明细数据表格 + CSV导出
 
-### 预警中心
-- 预警列表（红/橙/绿三级）
-- 一键处理预警
-- 预警统计卡片
+### 报告中心
+- AI自动生成报告
+- 报告列表、预览、删除
 
-### AI助手
-- 右下角悬浮按钮
-- 上下文感知对话
-- 基于当前数据分析
+### 任务管理
+- 任务列表、统计卡片
+- 状态筛选、完成任务操作
+
+### 数据导入
+- 拖拽上传 Excel/CSV/JSON 文件
+- 数据预览、确认导入
+
+### API数据源
+- API来源CRUD
+- 手动同步、同步日志
+
+### 数据库连接
+- MySQL连接配置
+- 连接测试、数据同步
+
+### AI分析
+- 趋势预测图表
+- 智能分析建议
+- 异常检测结果
+- 决策模拟分析
 
 ## 🚀 快速开始
 
@@ -71,7 +131,7 @@ python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # 安装依赖
-pip install -r requirements.txt
+pip install -r app/requirements.txt
 
 # 创建.env文件
 cat > .env << EOF
@@ -129,18 +189,36 @@ Pulse-for-OPCers/
 │   │   │   ├── dashboard.py   # 仪表盘API
 │   │   │   ├── analysis.py    # 数据分析API
 │   │   │   ├── alert.py       # 预警API
-│   │   │   └── ai.py          # AI对话API
+│   │   │   ├── report.py      # 报告API
+│   │   │   ├── task.py        # 任务API
+│   │   │   ├── import.py      # 导入API
+│   │   │   ├── datasource.py  # 数据源API
+│   │   │   ├── dbsource.py    # 数据库连接API
+│   │   │   ├── ai.py          # AI对话API
+│   │   │   └── ai_predict.py  # AI分析API
 │   │   ├── models/            # 数据模型
 │   │   ├── services/          # 业务服务
 │   │   ├── core/              # 核心配置
 │   │   └── seed.py            # 种子数据
 │   ├── alembic/               # 数据库迁移
-│   └── requirements.txt
+│   └── app/requirements.txt
 │
 ├── frontend/                   # 前端应用
 │   ├── src/
 │   │   ├── pages/             # 页面组件
+│   │   │   ├── Dashboard.tsx  # 首页仪表盘
+│   │   │   ├── Analysis.tsx   # 数据分析
+│   │   │   ├── Alerts.tsx     # 预警中心
+│   │   │   ├── Reports.tsx    # 报告中心
+│   │   │   ├── Tasks.tsx      # 任务管理
+│   │   │   ├── Import.tsx     # 数据导入
+│   │   │   ├── DataSources.tsx # API数据源
+│   │   │   ├── DbSources.tsx  # 数据库连接
+│   │   │   ├── AIAnalysis.tsx # AI分析
+│   │   │   └── Login.tsx      # 登录页
 │   │   ├── components/        # 公共组件
+│   │   │   ├── Sidebar.tsx    # 侧边栏
+│   │   │   └── AIPanel.tsx    # AI对话面板
 │   │   ├── services/          # API服务
 │   │   └── store/             # 状态管理
 │   └── package.json
@@ -169,7 +247,7 @@ Pulse-for-OPCers/
 
 ### AI
 - **模型**：DeepSeek Chat
-- **能力**：对话分析、数据洞察、报告生成
+- **能力**：对话分析、数据洞察、趋势预测、决策模拟、异常检测
 
 ## 📊 数据模型
 
@@ -180,6 +258,11 @@ Pulse-for-OPCers/
 | alert_rules | 预警规则表 |
 | alerts | 预警记录表 |
 | reports | 报告表 |
+| tasks | 任务表 |
+| import_records | 导入记录表 |
+| api_sources | API数据源表 |
+| db_sources | 数据库连接表 |
+| sync_logs | 同步日志表 |
 
 ## 🔧 API接口
 
@@ -204,9 +287,47 @@ Pulse-for-OPCers/
 - `GET /api/alerts/stats` - 获取预警统计
 - `POST /api/alerts/{id}/resolve` - 处理预警
 
-### AI
+### 报告
+- `GET /api/reports` - 获取报告列表
+- `POST /api/reports/generate` - AI生成报告
+- `GET /api/reports/{id}` - 获取报告详情
+- `DELETE /api/reports/{id}` - 删除报告
+
+### 任务
+- `GET /api/tasks` - 获取任务列表
+- `POST /api/tasks` - 创建任务
+- `PUT /api/tasks/{id}` - 更新任务
+- `DELETE /api/tasks/{id}` - 删除任务
+- `POST /api/tasks/{id}/complete` - 完成任务
+- `GET /api/tasks/stats` - 任务统计
+
+### 数据导入
+- `POST /api/import/upload` - 上传文件
+- `POST /api/import/confirm/{id}` - 确认导入
+- `GET /api/import/records` - 导入记录
+
+### API数据源
+- `GET /api/datasources` - 获取数据源列表
+- `POST /api/datasources` - 创建数据源
+- `PUT /api/datasources/{id}` - 更新数据源
+- `DELETE /api/datasources/{id}` - 删除数据源
+- `POST /api/datasources/{id}/sync` - 手动同步
+- `GET /api/datasources/{id}/logs` - 同步日志
+
+### 数据库连接
+- `GET /api/db-sources` - 获取数据库连接列表
+- `POST /api/db-sources` - 创建连接
+- `DELETE /api/db-sources/{id}` - 删除连接
+- `POST /api/db-sources/{id}/test` - 测试连接
+- `POST /api/db-sources/{id}/sync` - 手动同步
+- `GET /api/db-sources/{id}/tables` - 获取表列表
+
+### AI分析
 - `POST /api/ai/chat` - AI对话
-- `GET /api/ai/insights` - 获取AI洞察
+- `POST /api/ai/predict` - 趋势预测
+- `POST /api/ai/analyze` - 智能分析建议
+- `POST /api/ai/detect-anomaly` - 异常检测
+- `POST /api/ai/simulate` - 决策模拟
 
 ## 📝 开发说明
 

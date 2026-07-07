@@ -6,6 +6,7 @@ import {
   FileTextOutlined,
   SettingOutlined,
   CheckSquareOutlined,
+  ImportOutlined,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -37,6 +38,11 @@ const menuItems = [
     key: '/reports',
     icon: <FileTextOutlined />,
     label: '报告中心',
+  },
+  {
+    key: '/import',
+    icon: <ImportOutlined />,
+    label: '数据导入',
   },
   {
     key: '/settings',

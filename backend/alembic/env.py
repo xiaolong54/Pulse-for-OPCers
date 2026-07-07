@@ -8,7 +8,7 @@ from alembic import context
 # Import all models and Base
 from app.core.database import Base
 from app.core.config import settings
-from app.models import Metric, AlertRule, Alert, Report, User
+from app.models import Metric, AlertRule, Alert, Report, User, ImportRecord
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

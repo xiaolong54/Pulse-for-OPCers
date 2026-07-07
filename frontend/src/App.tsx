@@ -12,6 +12,7 @@ import Alerts from './pages/Alerts'
 import Tasks from './pages/Tasks'
 import Reports from './pages/Reports'
 import Settings from './pages/Settings'
+import Import from './pages/Import'
 
 const { Content } = Layout
 
@@ -64,6 +65,7 @@ function AppRoutes() {
         <Route path="/alerts" element={<Alerts />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/import" element={<Import />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

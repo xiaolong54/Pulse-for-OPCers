@@ -3,6 +3,7 @@ from app.models.alert import AlertRule, Alert
 from app.models.user import User
 from app.models.report import Report
 from app.models.task import Task
+from app.models.import_record import ImportRecord
 
 __all__ = [
     "Metric",
@@ -11,4 +12,5 @@ __all__ = [
     "User",
     "Report",
     "Task",
+    "ImportRecord",
 ]

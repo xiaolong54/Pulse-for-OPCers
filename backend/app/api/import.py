@@ -4,7 +4,9 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.import_record import ImportRecord
+from app.models.user import User
 from app.services.import_service import parse_file, preview_data
 
 router = APIRouter(prefix="/api/import", tags=["import"])
@@ -40,6 +42,7 @@ class PreviewResponse(BaseModel):
 async def upload_file(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """上传文件并解析，返回数据预览"""
     # Validate file extension
@@ -96,6 +99,7 @@ async def upload_file(
 def confirm_import(
     record_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """确认导入，将状态更新为成功"""
     record = db.query(ImportRecord).filter(ImportRecord.id == record_id).first()
@@ -136,6 +140,7 @@ def list_import_records(
     offset: int = 0,
     status: Optional[str] = None,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """获取导入记录列表"""
     query = db.query(ImportRecord)

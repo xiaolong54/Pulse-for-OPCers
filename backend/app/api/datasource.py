@@ -6,8 +6,10 @@ from datetime import datetime
 import httpx
 
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.api_source import ApiSource
 from app.models.sync_log import SyncLog
+from app.models.user import User
 
 router = APIRouter(prefix="/api/datasources", tags=["datasources"])
 
@@ -142,6 +144,7 @@ def _execute_sync(source: ApiSource) -> tuple[int, str]:
 def list_datasources(
     status: Optional[str] = Query(None, description="按状态筛选"),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """获取API数据源列表"""
     q = db.query(ApiSource)
@@ -152,7 +155,7 @@ def list_datasources(
 
 
 @router.post("")
-def create_datasource(data: ApiSourceCreate, db: Session = Depends(get_db)):
+def create_datasource(data: ApiSourceCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """创建API数据源"""
     source = ApiSource(
         name=data.name,
@@ -171,7 +174,7 @@ def create_datasource(data: ApiSourceCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{source_id}")
-def update_datasource(source_id: int, data: ApiSourceUpdate, db: Session = Depends(get_db)):
+def update_datasource(source_id: int, data: ApiSourceUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """更新API数据源"""
     source = db.query(ApiSource).filter(ApiSource.id == source_id).first()
     if not source:
@@ -187,7 +190,7 @@ def update_datasource(source_id: int, data: ApiSourceUpdate, db: Session = Depen
 
 
 @router.delete("/{source_id}")
-def delete_datasource(source_id: int, db: Session = Depends(get_db)):
+def delete_datasource(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """删除API数据源"""
     source = db.query(ApiSource).filter(ApiSource.id == source_id).first()
     if not source:
@@ -199,7 +202,7 @@ def delete_datasource(source_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{source_id}/sync")
-def sync_datasource(source_id: int, db: Session = Depends(get_db)):
+def sync_datasource(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """手动同步API数据源"""
     source = db.query(ApiSource).filter(ApiSource.id == source_id).first()
     if not source:
@@ -237,6 +240,7 @@ def list_sync_logs(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """获取数据源的同步日志"""
     source = db.query(ApiSource).filter(ApiSource.id == source_id).first()

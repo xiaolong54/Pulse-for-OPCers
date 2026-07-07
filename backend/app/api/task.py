@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.task import Task
+from app.models.user import User
 from datetime import datetime, date
 from typing import Optional
 from pydantic import BaseModel
@@ -61,6 +63,7 @@ def list_tasks(
     project: str = "",
     assignee: str = "",
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     q = db.query(Task)
     if status:
@@ -76,7 +79,7 @@ def list_tasks(
 
 
 @router.post("")
-def create_task(task_data: TaskCreate, db: Session = Depends(get_db)):
+def create_task(task_data: TaskCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     task = Task(
         title=task_data.title,
         description=task_data.description,
@@ -96,7 +99,7 @@ def create_task(task_data: TaskCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/stats")
-def get_task_stats(db: Session = Depends(get_db)):
+def get_task_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     total = db.query(Task).count()
     todo = db.query(Task).filter(Task.status == "todo").count()
     in_progress = db.query(Task).filter(Task.status == "in_progress").count()
@@ -114,7 +117,7 @@ def get_task_stats(db: Session = Depends(get_db)):
 
 
 @router.put("/{task_id}")
-def update_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_db)):
+def update_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -127,7 +130,7 @@ def update_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_d
 
 
 @router.delete("/{task_id}")
-def delete_task(task_id: int, db: Session = Depends(get_db)):
+def delete_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -137,7 +140,7 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{task_id}/complete")
-def complete_task(task_id: int, db: Session = Depends(get_db)):
+def complete_task(task_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")

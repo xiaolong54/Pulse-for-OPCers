@@ -4,7 +4,9 @@ from pydantic import BaseModel
 from typing import Optional
 
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.db_source import DbSource
+from app.models.user import User
 from app.services import dbsource_service
 
 router = APIRouter(prefix="/api/db-sources", tags=["db-sources"])
@@ -73,6 +75,7 @@ def _get_source_or_404(source_id: int, db: Session) -> DbSource:
 def list_db_sources(
     status: Optional[str] = Query(None, description="按状态筛选"),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """获取数据库连接列表"""
     q = db.query(DbSource)
@@ -83,7 +86,7 @@ def list_db_sources(
 
 
 @router.post("")
-def create_db_source(data: DbSourceCreate, db: Session = Depends(get_db)):
+def create_db_source(data: DbSourceCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """创建数据库连接"""
     source = DbSource(
         name=data.name,
@@ -104,7 +107,7 @@ def create_db_source(data: DbSourceCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{source_id}")
-def update_db_source(source_id: int, data: DbSourceUpdate, db: Session = Depends(get_db)):
+def update_db_source(source_id: int, data: DbSourceUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """更新数据库连接"""
     source = _get_source_or_404(source_id, db)
     update_data = data.dict(exclude_unset=True)
@@ -116,7 +119,7 @@ def update_db_source(source_id: int, data: DbSourceUpdate, db: Session = Depends
 
 
 @router.delete("/{source_id}")
-def delete_db_source(source_id: int, db: Session = Depends(get_db)):
+def delete_db_source(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """删除数据库连接"""
     source = _get_source_or_404(source_id, db)
     db.delete(source)
@@ -125,20 +128,20 @@ def delete_db_source(source_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{source_id}/test")
-def test_db_connection(source_id: int, db: Session = Depends(get_db)):
+def test_db_connection(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """测试数据库连接"""
     source = _get_source_or_404(source_id, db)
     return dbsource_service.test_connection(source)
 
 
 @router.post("/{source_id}/sync")
-def sync_db_source(source_id: int, db: Session = Depends(get_db)):
+def sync_db_source(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """手动同步数据库"""
     return dbsource_service.sync_from_db(source_id, db)
 
 
 @router.get("/{source_id}/tables")
-def get_db_tables(source_id: int, db: Session = Depends(get_db)):
+def get_db_tables(source_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """获取数据库表列表"""
     source = _get_source_or_404(source_id, db)
     return dbsource_service.get_tables(source)

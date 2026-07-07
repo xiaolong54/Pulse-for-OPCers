@@ -2,15 +2,17 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.metric import Metric
 from app.models.alert import Alert
+from app.models.user import User
 from datetime import datetime, timedelta
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
 
 @router.get("/kpi")
-def get_kpi(db: Session = Depends(get_db)):
+def get_kpi(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     today = datetime.now()
     month_start = today.replace(day=1)
     last_month_start = (month_start - timedelta(days=1)).replace(day=1)
@@ -25,7 +27,7 @@ def get_kpi(db: Session = Depends(get_db)):
 
 
 @router.get("/trend")
-def get_trend(days: int = Query(30), db: Session = Depends(get_db)):
+def get_trend(days: int = Query(30), db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     since = datetime.now() - timedelta(days=days)
     results = db.query(
         func.date(Metric.recorded_at).label("date"),
@@ -40,7 +42,7 @@ def get_trend(days: int = Query(30), db: Session = Depends(get_db)):
 
 
 @router.get("/insights")
-def get_insights(db: Session = Depends(get_db)):
+def get_insights(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     month_start = datetime.now().replace(day=1)
     total = db.query(func.sum(Metric.value)).filter(Metric.recorded_at >= month_start).scalar() or 0
     count = db.query(Metric).filter(Metric.recorded_at >= month_start).count()

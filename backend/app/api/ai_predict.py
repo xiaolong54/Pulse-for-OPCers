@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from typing import Optional
 from app.core.database import get_db
+from app.core.deps import get_current_user
+from app.models.user import User
 from app.services.ai_prediction import (
     predict_trend,
     analyze_metric,
@@ -33,7 +35,7 @@ class SimulateRequest(BaseModel):
 
 
 @router.post("/predict")
-async def predict(req: PredictRequest, db: Session = Depends(get_db)):
+async def predict(req: PredictRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """趋势预测接口"""
     try:
         result = await predict_trend(req.metric_name, req.days, db)
@@ -46,7 +48,7 @@ async def predict(req: PredictRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/analyze")
-async def analyze(req: AnalyzeRequest, db: Session = Depends(get_db)):
+async def analyze(req: AnalyzeRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """智能分析建议接口"""
     try:
         result = await analyze_metric(req.metric_name, db)
@@ -59,7 +61,7 @@ async def analyze(req: AnalyzeRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/detect-anomaly")
-async def detect(req: AnomalyRequest, db: Session = Depends(get_db)):
+async def detect(req: AnomalyRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """异常检测接口"""
     try:
         result = await detect_anomaly(req.metric_name, req.threshold, db)
@@ -72,7 +74,7 @@ async def detect(req: AnomalyRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/simulate")
-async def simulate(req: SimulateRequest, db: Session = Depends(get_db)):
+async def simulate(req: SimulateRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """决策模拟接口"""
     try:
         result = await simulate_decision(req.metric_name, req.scenario, db)

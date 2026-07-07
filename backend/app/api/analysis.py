@@ -2,20 +2,22 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.metric import Metric
+from app.models.user import User
 from datetime import datetime
 
 router = APIRouter(prefix="/api/analysis", tags=["analysis"])
 
 
 @router.get("/categories")
-def get_categories(db: Session = Depends(get_db)):
+def get_categories(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     results = db.query(Metric.category).distinct().all()
     return [r.category for r in results if r.category]
 
 
 @router.get("/regions")
-def get_regions(db: Session = Depends(get_db)):
+def get_regions(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     results = db.query(Metric.region).distinct().all()
     return [r.region for r in results if r.region]
 
@@ -27,6 +29,7 @@ def get_data(
     start: str = "",
     end: str = "",
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     q = db.query(Metric)
     if category:
@@ -59,6 +62,7 @@ def get_chart_data(
     start: str = "",
     end: str = "",
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     q = db.query(
         func.date(Metric.recorded_at).label("date"),

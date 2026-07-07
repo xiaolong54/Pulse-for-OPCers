@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from app.core.database import get_db
+from app.core.deps import get_current_user
 from app.models.alert import Alert, AlertRule
+from app.models.user import User
 from datetime import datetime
 
 router = APIRouter(prefix="/api/alerts", tags=["alerts"])
@@ -13,6 +15,7 @@ def list_alerts(
     status: str = "",
     severity: str = "",
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     q = db.query(Alert)
     if status:
@@ -33,7 +36,7 @@ def list_alerts(
 
 
 @router.get("/stats")
-def get_stats(db: Session = Depends(get_db)):
+def get_stats(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     total = db.query(Alert).count()
     pending = db.query(Alert).filter(Alert.status == "pending").count()
     high = db.query(Alert).filter(
@@ -43,7 +46,7 @@ def get_stats(db: Session = Depends(get_db)):
 
 
 @router.post("/{alert_id}/resolve")
-def resolve_alert(alert_id: int, db: Session = Depends(get_db)):
+def resolve_alert(alert_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         return {"error": "not found"}
@@ -54,7 +57,7 @@ def resolve_alert(alert_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/rules")
-def list_rules(db: Session = Depends(get_db)):
+def list_rules(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     rules = db.query(AlertRule).all()
     return [
         {

@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from app.core.database import get_db
+from app.core.deps import get_current_user
+from app.models.user import User
 from app.services.report_service import (
     generate_report_content,
     get_reports,
@@ -43,13 +45,14 @@ def list_reports(
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """获取报告列表"""
     return get_reports(db, report_type=report_type, format=format, limit=limit, offset=offset)
 
 
 @router.get("/{report_id}")
-def get_report(report_id: int, db: Session = Depends(get_db)):
+def get_report(report_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """获取报告详情"""
     report = get_report_by_id(db, report_id)
     if not report:
@@ -58,7 +61,7 @@ def get_report(report_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/generate")
-async def generate_report(req: GenerateReportRequest, db: Session = Depends(get_db)):
+async def generate_report(req: GenerateReportRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """AI生成报告"""
     # 使用AI生成报告内容
     content = await generate_report_content(req.report_type, req.data_context)
@@ -85,7 +88,7 @@ async def generate_report(req: GenerateReportRequest, db: Session = Depends(get_
 
 
 @router.delete("/{report_id}")
-def remove_report(report_id: int, db: Session = Depends(get_db)):
+def remove_report(report_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """删除报告"""
     success = delete_report(db, report_id)
     if not success:
@@ -94,7 +97,7 @@ def remove_report(report_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{report_id}/download")
-def download_report(report_id: int, db: Session = Depends(get_db)):
+def download_report(report_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """下载报告（记录下载次数）"""
     report = get_report_by_id(db, report_id)
     if not report:
